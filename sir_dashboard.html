@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIR Module — Constituency Connect</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  :root{
+    --bg:#0a0d14;
+    --panel:#12151d;
+    --panel-alt:#0d0f16;
+    --border:#1c2029;
+    --border-strong:#262b36;
+    --text-primary:#f5f6f8;
+    --text-secondary:#9aa0ab;
+    --text-muted:#5f636c;
+    --amber:#e3a008;
+    --amber-bg:#3a2a0a;
+    --teal:#1d9e75;
+    --teal-bg:#0c231c;
+    --red:#e0847f;
+    --red-bg:#3a1c1c;
+    --blue:#378add;
+    --purple:#7f77dd;
+    --pink:#d4537e;
+    --green:#639922;
+    --gray:#888780;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text-primary);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:14px;
+    line-height:1.5;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  /* ---------- Top nav ---------- */
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 28px;border-bottom:0.5px solid var(--border);
+    flex-wrap:wrap;gap:12px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px;}
+  .brand .sub{display:block;font-size:9px;font-weight:600;letter-spacing:0.06em;color:var(--amber);}
+  nav{display:flex;gap:4px;flex-wrap:wrap;}
+  nav a{
+    display:flex;align-items:center;gap:6px;
+    padding:7px 12px;border-radius:7px;font-size:13px;color:var(--text-secondary);
+    transition:background .15s;
+  }
+  nav a:hover{background:#181b24;color:var(--text-primary);}
+  nav a.active{background:var(--amber-bg);color:var(--amber);font-weight:600;}
+  nav a.danger{background:var(--red-bg);color:var(--red);}
+  nav a.teal{background:var(--teal-bg);color:#5dcaa5;}
+  .user-block{display:flex;align-items:center;gap:14px;}
+  .avatar{
+    width:32px;height:32px;border-radius:50%;
+    background:linear-gradient(135deg,#5dcaa5,#378add);
+    display:flex;align-items:center;justify-content:center;font-weight:600;font-size:12px;color:#04342c;
+  }
+  .user-name{font-size:13px;line-height:1.3;}
+  .user-name .role{display:block;font-size:10px;color:var(--amber);font-weight:600;}
+  .logout{
+    display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:7px;
+    border:0.5px solid #3a1c1c;color:var(--red);font-size:13px;cursor:pointer;background:none;
+  }
+  .logout:hover{background:var(--red-bg);}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:32px 28px 8px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:600;color:var(--amber);
+    background:var(--amber-bg);padding:5px 11px;border-radius:7px;
+  }
+  h1{font-size:26px;font-weight:600;margin:14px 0 6px;}
+  .hero p{color:var(--text-secondary);font-size:13px;}
+
+  /* ---------- AI banner ---------- */
+  .ai-banner{
+    margin:20px 28px;padding:14px 18px;border-radius:10px;
+    background:var(--panel);border:0.5px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+  .ai-banner-left{display:flex;align-items:center;gap:14px;}
+  .ai-icon{
+    width:38px;height:38px;border-radius:9px;background:var(--amber-bg);
+    display:flex;align-items:center;justify-content:center;color:var(--amber);font-size:18px;flex-shrink:0;
+  }
+  .ai-banner-title{font-size:14px;font-weight:600;}
+  .ai-banner-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
+  .btn-generate{
+    background:var(--amber);color:#2c1c02;border:none;font-weight:600;
+    padding:9px 18px;border-radius:7px;font-size:13px;cursor:pointer;
+  }
+  .btn-generate:hover{filter:brightness(1.08);}
+
+  /* ---------- Search card ---------- */
+  .card{
+    margin:0 28px 20px;padding:18px 20px;border-radius:12px;
+    background:var(--panel);border:0.5px solid var(--border);
+  }
+  .card-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:2px;}
+  .card-title{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;}
+  .card-title i{color:var(--blue);}
+  .card-sub{font-size:12px;color:var(--text-muted);margin:2px 0 16px;}
+  .card-actions{display:flex;gap:8px;}
+  .btn{
+    display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:7px;
+    font-size:13px;font-weight:500;cursor:pointer;border:0.5px solid var(--border-strong);
+    background:#161922;color:var(--text-primary);
+  }
+  .btn:hover{background:#1c202b;}
+  .btn.primary{background:var(--blue);border-color:var(--blue);color:#042c53;}
+  .btn.primary:hover{filter:brightness(1.08);}
+
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .field label{
+    display:flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:600;color:var(--text-secondary);
+    text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;
+  }
+  .field label .hint{text-transform:none;font-weight:400;color:var(--text-muted);font-size:11px;}
+  .field input{
+    width:100%;height:38px;background:var(--panel-alt);
+    border:0.5px solid var(--border-strong);border-radius:8px;
+    padding:0 12px;color:var(--text-primary);font-size:13px;
+  }
+  .field input::placeholder{color:var(--text-muted);}
+  .field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #378add22;}
+
+  /* ---------- Results ---------- */
+  .results-label{
+    display:flex;align-items:center;gap:8px;margin:20px 0 10px;
+    font-size:11px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.04em;
+  }
+  .results-label .hint{text-transform:none;font-weight:400;color:var(--text-muted);}
+
+  .roll-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:880px){.roll-grid,.field-grid{grid-template-columns:1fr;}}
+
+  .roll-panel{background:var(--panel);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;}
+  .roll-head{padding:12px 16px;border-bottom:0.5px solid var(--border);}
+  .roll-head-top{display:flex;align-items:center;justify-content:space-between;}
+  .roll-title{font-size:13px;font-weight:700;color:var(--amber);}
+  .roll-count{font-size:11px;color:var(--text-muted);}
+  .roll-dots{display:flex;gap:12px;margin-top:8px;font-size:11px;color:var(--text-secondary);}
+  .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;}
+  .dot.blue{background:var(--blue);} .dot.gray{background:var(--gray);} .dot.purple{background:var(--purple);}
+
+  .roll-sub{
+    display:flex;align-items:center;gap:6px;padding:8px 16px;font-size:12px;
+    color:#5dcaa5;background:var(--teal-bg);border-bottom:0.5px solid var(--border);
+  }
+  .badge-row{display:flex;gap:6px;padding:8px 16px;border-bottom:0.5px solid var(--border);flex-wrap:wrap;}
+  .badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;}
+  .badge.amber{background:var(--amber-bg);color:var(--amber);}
+  .badge.teal{background:var(--teal-bg);color:#5dcaa5;}
+  .badge.blue{background:#0c2b45;color:#85b7eb;}
+  .badge.purple{background:#241f45;color:#afa9ec;}
+  .badge.pink{background:#3a1c2b;color:#ed93b1;}
+  .badge.gray{background:#22221f;color:#b4b2a9;}
+  .badge.green{background:#1a2b0e;color:#97c459;}
+
+  table{width:100%;border-collapse:collapse;}
+  thead th{
+    text-align:left;font-size:10px;font-weight:600;color:var(--text-muted);
+    text-transform:uppercase;letter-spacing:.04em;padding:8px 16px;
+    border-bottom:0.5px solid var(--border);position:sticky;top:0;background:var(--panel);
+  }
+  tbody td{padding:10px 16px;font-size:12px;border-bottom:0.5px solid var(--border);vertical-align:middle;}
+  tbody tr:hover{background:#161922;}
+  tbody tr:last-child td{border-bottom:none;}
+  .scroll-body{max-height:520px;overflow-y:auto;padding:10px 12px;}
+  .scroll-body::-webkit-scrollbar{width:6px;}
+  .scroll-body::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px;}
+
+  .name-cell{color:var(--text-primary);font-weight:500;}
+  .name-cell .hi{color:var(--blue);}
+  .muted-cell{color:var(--text-secondary);}
+
+  /* ---------- Voter cards (results) ---------- */
+  .voter-list{display:flex;flex-direction:column;gap:8px;}
+  .voter-card{
+    background:var(--panel-alt);border:0.5px solid var(--border-strong);border-radius:10px;
+    padding:12px 14px;transition:border-color .15s,background .15s;
+  }
+  .voter-card:hover{border-color:var(--blue);background:#12151f;}
+  .vc-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+  .vc-top-left{display:flex;align-items:center;gap:10px;min-width:0;}
+  .vc-name{font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .vc-name .hi{color:var(--blue);}
+  .vc-score{font-size:10px;color:var(--text-muted);flex-shrink:0;}
+  .vc-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 14px;}
+  @media(max-width:1180px){.vc-fields{grid-template-columns:repeat(2,1fr);}}
+  .vc-field{min-width:0;}
+  .vc-field-label{
+    display:block;font-size:9px;font-weight:600;color:var(--text-muted);
+    text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;
+  }
+  .vc-field-value{
+    display:block;font-size:12px;color:var(--text-secondary);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .vc-field-value.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text-primary);}
+  .vc-field-value .hi{color:var(--blue);}
+  .vc-field-value.empty{color:var(--text-muted);font-style:italic;}
+  .voter-empty{padding:30px 16px;text-align:center;color:var(--text-muted);font-size:12px;}
+  .status-pill{
+    font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;display:inline-block;
+  }
+  .status-pill.not-mapped{background:var(--red-bg);color:var(--red);}
+  .status-pill.mapped{background:#1a2b0e;color:#97c459;}
+  .status-pill.completed{background:var(--teal-bg);color:#5dcaa5;}
+  input[type=checkbox]{width:15px;height:15px;accent-color:var(--blue);}
+  .empty-row td{padding:28px 16px;text-align:center;color:var(--text-muted);font-size:12px;}
+
+  /* ---------- Name variant chips ---------- */
+  .variant-row{display:none;flex-wrap:wrap;align-items:center;gap:8px;margin:2px 0 14px;}
+  .variant-row.show{display:flex;}
+  .variant-row .variant-label{font-size:11px;color:var(--text-muted);}
+  .variant-chip{
+    font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;
+    background:#0c2b45;color:#85b7eb;border:0.5px solid #1a3a5c;
+  }
+  .variant-chip.base{background:var(--amber-bg);color:var(--amber);border-color:#4a3610;}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;gap:26px;flex-wrap:wrap;">
+    <div class="brand"><i class="ti ti-shield-check" style="color:var(--blue);font-size:20px;"></i>Constituency <span style="color:var(--amber);margin-left:2px;">Connect</span></div>
+    <nav>
+      <a href="#"><i class="ti ti-layout-dashboard"></i>Dashboard</a>
+      <a href="#"><i class="ti ti-clipboard-list"></i>Survey</a>
+      <a href="#"><i class="ti ti-building-community"></i>Schemes</a>
+      <a href="#"><i class="ti ti-database"></i>Data</a>
+      <a href="#" class="active"><i class="ti ti-checkbox"></i>SIR</a>
+      <a href="#"><i class="ti ti-grid-dots"></i>SWOT</a>
+      <a href="#" class="danger"><i class="ti ti-star"></i>BJP Strategy</a>
+      <a href="#" class="teal"><i class="ti ti-bolt"></i>AI</a>
+      <a href="#"><i class="ti ti-settings"></i>Admin</a>
+    </nav>
+  </div>
+  <div class="user-block">
+    <div class="avatar">VK</div>
+    <div class="user-name">Vedavyas kamath<span class="role">MLA</span></div>
+    <button class="logout"><i class="ti ti-logout"></i>Logout</button>
+  </div>
+</header>
+
+<section class="hero">
+  <span class="eyebrow"><i class="ti ti-file-check"></i>SIR module</span>
+  <h1>Special intensive revision</h1>
+  <p>Voter roll comparison &middot; 2002 vs 2025 &middot; Anomaly detection &middot; Classification</p>
+</section>
+
+<div class="ai-banner">
+  <div class="ai-banner-left">
+    <div class="ai-icon"><i class="ti ti-bolt"></i></div>
+    <div>
+      <div class="ai-banner-title">Get AI overview — SIR intelligence</div>
+      <div class="ai-banner-sub">ShaastraAI &middot; 19 records &middot; Ward + religion + booth analysis</div>
+    </div>
+  </div>
+  <button class="btn-generate">Generate</button>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-title"><i class="ti ti-search"></i>Instant SIR check</div>
+    <div class="card-actions">
+      <button class="btn primary" id="btnSearch"><i class="ti ti-user-search"></i>Name search</button>
+      <button class="btn" id="btnClear"><i class="ti ti-x"></i>Clear</button>
+    </div>
+  </div>
+  <p class="card-sub">Cross-reference a voter across 2002 and 2025 rolls in real time</p>
+  <p id="conn-status" style="font-size:11px;color:var(--text-muted);margin:-10px 0 14px;"></p>
+  <div class="variant-row" id="variantRow">
+    <span class="variant-label"><i class="ti ti-wand"></i> Also matching spelling/short-form variants:</span>
+    <span id="variantChips"></span>
+  </div>
+
+  <div class="field-grid">
+    <div class="field">
+      <label><i class="ti ti-user"></i>Voter name</label>
+      <input id="q-name" placeholder="Full or partial name" autocomplete="off">
+    </div>
+    <div class="field">
+      <label><i class="ti ti-id-badge-2"></i>EPIC / voter ID</label>
+      <input id="q-epic" placeholder="e.g. NUX4001234" autocomplete="off">
+    </div>
+    <div class="field">
+      <label><i class="ti ti-home"></i>House / flat no <span class="hint">Narrows search — partial match supported</span></label>
+      <input id="q-house" placeholder="e.g. 7-1-42 or 2-14-1223" autocomplete="off">
+    </div>
+    <div class="field">
+      <label><i class="ti ti-users"></i>Relative name <span class="hint">Search standalone or as fallback</span></label>
+      <input id="q-rel" placeholder="Father / husband name" autocomplete="off">
+    </div>
+    <div class="field">
+      <label><i class="ti ti-map-pin"></i>Constituency <span class="hint">Full or partial name</span></label>
+      <input id="q-constituency" placeholder="e.g. Mangalore City North" autocomplete="off">
+    </div>
+  </div>
+</div>
+
+<div style="padding:0 28px 40px;">
+  <div class="results-label">
+    <i class="ti ti-list-search"></i>Similar records found <span class="hint">— grouped by matching fields</span>
+  </div>
+
+  <div class="roll-grid">
+    <!-- 2025 roll -->
+    <div class="roll-panel">
+      <div class="roll-head">
+        <div class="roll-head-top">
+          <span class="roll-title">2025 roll</span>
+          <span class="roll-count" id="count2025">6 records</span>
+        </div>
+      </div>
+      <div class="badge-row" id="badges2025"></div>
+      <div class="scroll-body">
+        <div class="voter-list" id="rows2025"></div>
+      </div>
+    </div>
+
+    <!-- 2002 roll -->
+    <div class="roll-panel">
+      <div class="roll-head">
+        <div class="roll-head-top">
+          <span class="roll-title">2002 roll</span>
+          <span class="roll-count" id="count2002">4 records</span>
+        </div>
+      </div>
+      <div class="badge-row" id="badges2002"></div>
+      <div class="scroll-body">
+        <div class="voter-list" id="rows2002"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---- connects to the FastAPI backend in api_server.py ---- */
+const API_BASE = "";   // same-origin: this page is now served BY api_server.py itself
+                        // (both locally at :8000 and once deployed), so relative paths
+                        // just work. If you ever go back to opening this file directly
+                        // via file://, set this back to "http://localhost:8000".
+
+function esc(s){return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+
+function highlight(text, needle){
+  text = text || "";
+  if(!needle) return esc(text);
+  const i = text.toLowerCase().indexOf(needle.toLowerCase());
+  if(i === -1) return esc(text);
+  return esc(text.slice(0,i)) + '<span class="hi">' + esc(text.slice(i,i+needle.length)) + '</span>' + esc(text.slice(i+needle.length));
+}
+
+function statusPill(status){
+  if(status==="not-mapped" || status==="deleted") return '<span class="status-pill not-mapped"><i class="ti ti-x"></i> ' + esc(status) + '</span>';
+  if(status==="completed") return '<span class="status-pill completed"><i class="ti ti-check"></i> SIR completed</span>';
+  return '<span class="status-pill mapped"><i class="ti ti-check"></i> ' + esc(status || "active") + '</span>';
+}
+
+function getFilters(){
+  return {
+    name:  document.getElementById('q-name').value.trim(),
+    epic:  document.getElementById('q-epic').value.trim(),
+    house: document.getElementById('q-house').value.trim(),
+    rel:   document.getElementById('q-rel').value.trim(),
+    constituency: document.getElementById('q-constituency').value.trim(),
+  };
+}
+
+function setConnStatus(state, msg){
+  const el = document.getElementById('conn-status');
+  const colors = {ok:'#5dcaa5', error:'#e0847f', loading:'#e3a008'};
+  el.style.color = colors[state] || '#8a909b';
+  el.textContent = msg;
+}
+
+function emptyState(msg){
+  return '<div class="voter-empty">' + esc(msg) + '</div>';
+}
+
+function fieldValue(text, needle){
+  const has = text !== null && text !== undefined && String(text).trim() !== '';
+  if(!has) return '<span class="vc-field-value empty">—</span>';
+  return '<span class="vc-field-value">' + highlight(String(text), needle) + '</span>';
+}
+
+function renderVariantChips(data){
+  const row = document.getElementById('variantRow');
+  const holder = document.getElementById('variantChips');
+
+  // index 0 of each list is the as-typed value itself — only show the
+  // generated extras, deduped, so the row doesn't just repeat the input.
+  const nameExtras = (data.name_variants_tried || []).slice(1);
+  const relExtras = (data.relation_variants_tried || []).slice(1);
+  const extras = [...new Set([...nameExtras, ...relExtras])];
+
+  if(!extras.length){
+    row.classList.remove('show');
+    holder.innerHTML = '';
+    return;
+  }
+  holder.innerHTML = extras.map(v => `<span class="variant-chip">${esc(v)}</span>`).join(' ');
+  row.classList.add('show');
+}
+
+function voterCard(r, filters){
+  return `
+    <div class="voter-card">
+      <div class="vc-top">
+        <div class="vc-top-left">
+          <input type="checkbox" class="vc-check">
+          <span class="vc-name">${highlight(r.name, filters.name)}</span>
+        </div>
+        ${statusPill(r.status)}
+      </div>
+      <div class="vc-fields">
+        <div class="vc-field">
+          <span class="vc-field-label"><i class="ti ti-users"></i> Relation</span>
+          ${fieldValue(r.relation, filters.rel)}
+        </div>
+        <div class="vc-field">
+          <span class="vc-field-label"><i class="ti ti-id-badge-2"></i> Voter ID</span>
+          <span class="vc-field-value mono">${r.epic ? highlight(r.epic, filters.epic) : '<span class="vc-field-value empty">—</span>'}</span>
+        </div>
+        <div class="vc-field">
+          <span class="vc-field-label"><i class="ti ti-home"></i> House no</span>
+          ${fieldValue(r.house, filters.house)}
+        </div>
+        <div class="vc-field">
+          <span class="vc-field-label"><i class="ti ti-map-pin"></i> Constituency</span>
+          ${fieldValue(r.constituency, filters.constituency)}
+        </div>
+        <div class="vc-field">
+          <span class="vc-field-label"><i class="ti ti-list-numbers"></i> Part no</span>
+          ${fieldValue(r.part_no)}
+        </div>
+        <div class="vc-field">
+          <span class="vc-field-label"><i class="ti ti-gender-bigender"></i> Gender</span>
+          ${fieldValue(r.gender)}
+        </div>
+        <div class="vc-field">
+          <span class="vc-field-label"><i class="ti ti-star-of-david"></i> Religion</span>
+          ${fieldValue(r.religion)}
+        </div>
+        <div class="vc-field">
+          <span class="vc-field-label"><i class="ti ti-users-group"></i> Community</span>
+          ${fieldValue(r.community)}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderRolls(data, filters){
+  const anyFilter = filters.name || filters.epic || filters.house || filters.rel || filters.constituency;
+
+  document.getElementById('count2025').textContent = (data.count_2025 ?? data.results_2025.length) + ' records';
+  document.getElementById('count2002').textContent = (data.count_2002 ?? data.results_2002.length) + ' records';
+
+  const badgeColors = {name:['Voter name','blue'], epic:['Voter ID','amber'], house:['House no','purple'], rel:['Relation','pink'], constituency:['Constituency','green']};
+
+  function badgesFor(rows){
+    const counts = {};
+    rows.forEach(r => {
+      if(filters.name  && (r.name||'').toLowerCase().includes(filters.name.toLowerCase()))  counts.name  = (counts.name||0)+1;
+      if(filters.epic  && (r.epic||'').toLowerCase().includes(filters.epic.toLowerCase()))  counts.epic  = (counts.epic||0)+1;
+      if(filters.house && (r.house||'').toLowerCase().includes(filters.house.toLowerCase())) counts.house = (counts.house||0)+1;
+      if(filters.rel   && (r.relation||'').toLowerCase().includes(filters.rel.toLowerCase())) counts.rel  = (counts.rel||0)+1;
+      if(filters.constituency && (r.constituency||'').toLowerCase().includes(filters.constituency.toLowerCase())) counts.constituency = (counts.constituency||0)+1;
+    });
+    return Object.entries(counts).map(([k,n]) => {
+      const [label,color] = badgeColors[k];
+      return '<span class="badge '+color+'">'+esc(label)+' matched ('+n+')</span>';
+    }).join('') || (anyFilter ? '' : '<span class="badge gray">Showing all records</span>');
+  }
+
+  document.getElementById('badges2025').innerHTML = badgesFor(data.results_2025);
+  document.getElementById('rows2025').innerHTML = data.results_2025.length
+    ? data.results_2025.map(r => voterCard(r, filters)).join('')
+    : emptyState(anyFilter ? 'No matches — try a different search' : 'Type a name, EPIC, house no, or relation above to search');
+
+  document.getElementById('badges2002').innerHTML = badgesFor(data.results_2002);
+  document.getElementById('rows2002').innerHTML = data.results_2002.length
+    ? data.results_2002.map(r => voterCard(r, filters)).join('')
+    : emptyState(anyFilter ? 'No matches — try a different search' : 'Type a name, EPIC, house no, or relation above to search');
+}
+
+let debounceTimer = null;
+async function search(){
+  const f = getFilters();
+  if(!f.name && !f.epic && !f.house && !f.rel && !f.constituency){
+    renderRolls({results_2025:[], results_2002:[], count_2025:0, count_2002:0}, f);
+    renderVariantChips({});
+    setConnStatus('', '');
+    return;
+  }
+
+  setConnStatus('loading', 'Searching…');
+  const params = new URLSearchParams();
+  if(f.name)  params.set('name', f.name);
+  if(f.epic)  params.set('epic', f.epic);
+  if(f.house) params.set('house', f.house);
+  if(f.rel)   params.set('relation', f.rel);
+  if(f.constituency) params.set('constituency', f.constituency);
+  // Each field the user fills in should NARROW the results, not broaden
+  // them -- e.g. name + house together must both match on the same
+  // record. AND is safe even with only one field filled in (a single
+  // required clause behaves identically under AND or OR).
+  params.set('mode', 'AND');
+
+  try{
+    const res = await fetch(`${API_BASE}/api/search?${params.toString()}`);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if(data.error) throw new Error(data.error);
+    setConnStatus('ok', 'Connected · live results from Elasticsearch');
+    renderRolls(data, f);
+    renderVariantChips(data);
+  }catch(err){
+    setConnStatus('error', 'Backend not reachable at ' + API_BASE + ' — start api_server.py');
+    renderRolls({results_2025:[], results_2002:[], count_2025:0, count_2002:0}, f);
+    renderVariantChips({});
+  }
+}
+
+function debouncedSearch(){
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(search, 350);
+}
+
+['q-name','q-epic','q-house','q-rel','q-constituency'].forEach(id =>
+  document.getElementById(id).addEventListener('input', debouncedSearch)
+);
+document.getElementById('btnClear').addEventListener('click', () => {
+  ['q-name','q-epic','q-house','q-rel','q-constituency'].forEach(id => document.getElementById(id).value = '');
+  search();
+});
+document.getElementById('btnSearch').addEventListener('click', search);
+
+// initial connectivity check
+fetch(`${API_BASE}/api/health`).then(r => r.ok ? setConnStatus('ok','Connected to SIR backend') : setConnStatus('error','Backend responded with an error'))
+  .catch(() => setConnStatus('error', 'Backend not reachable at ' + API_BASE + ' — start api_server.py'));
+</script>
+</body>
+</html>

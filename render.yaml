@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: sir-dk-api
+    runtime: python
+    plan: starter          # bump if search feels slow under load - see DEPLOY.md
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api_server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      # All secrets: set actual values in the Render dashboard (Environment
+      # tab), NOT here. `sync: false` just means "this blueprint declares
+      # the key exists, but its value lives only in Render's dashboard."
+      - key: SIR_MONGO_URI
+        sync: false
+      - key: SIR_ES_HOSTS
+        sync: false
+      - key: SIR_ES_USERNAME
+        sync: false
+      - key: SIR_ES_PASSWORD
+        sync: false
+      - key: SIR_DASHBOARD_USER
+        sync: false
+      - key: SIR_DASHBOARD_PASSWORD
+        sync: false
+
+  # OPTIONAL - only needed if you want a dashboard "Trigger Run" button for
+  # `main.py sync` instead of using Shell (see DEPLOY.md "Running the sync
+  # command"). Delete this block entirely if you'd rather just use Shell -
+  # it costs at least $1/month (prorated by the second) to exist at all,
+  # separate from the web service above. No `schedule:` is set here on
+  # purpose, so it never runs on its own - only via a manual "Trigger Run"
+  # in the Render dashboard. Add a `schedule:` (5-field cron expression,
+  # evaluated in UTC) if you want it to also run automatically, e.g.
+  # schedule: "0 3 * * *"  for daily at 3am UTC.
+  - type: cron
+    name: sir-dk-es-sync
+    runtime: python
+    plan: starter
+    schedule: "0 3 1 1 *"   # placeholder: 3am Jan 1st only - effectively "never automatically";
+                             # this field is required by Render even for manual-only cron jobs
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py sync --timeline both --force
+    envVars:
+      - key: SIR_MONGO_URI
+        sync: false
+      - key: SIR_ES_HOSTS
+        sync: false
+      - key: SIR_ES_USERNAME
+        sync: false
+      - key: SIR_ES_PASSWORD
+        sync: false
