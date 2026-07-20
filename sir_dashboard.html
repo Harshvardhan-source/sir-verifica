@@ -3,85 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIR Module — Constituency Connect</title>
+<title>SIR Roll Verification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
 <style>
   :root{
-    --bg:#0a0d14;
-    --panel:#12151d;
-    --panel-alt:#0d0f16;
-    --border:#1c2029;
-    --border-strong:#262b36;
-    --text-primary:#f5f6f8;
-    --text-secondary:#9aa0ab;
-    --text-muted:#5f636c;
-    --amber:#e3a008;
-    --amber-bg:#3a2a0a;
-    --teal:#1d9e75;
-    --teal-bg:#0c231c;
-    --red:#e0847f;
-    --red-bg:#3a1c1c;
-    --blue:#378add;
-    --purple:#7f77dd;
-    --pink:#d4537e;
-    --green:#639922;
-    --gray:#888780;
+    --bg:#0a0e16;
+    --panel:#131826;
+    --panel-alt:#0e1220;
+    --border:#1e2431;
+    --border-strong:#2a3140;
+    --text-primary:#eef1f6;
+    --text-secondary:#98a1b5;
+    --text-muted:#5b6377;
+    --amber:#c99a3d;
+    --amber-bg:#2c2409;
+    --teal:#2aa17c;
+    --teal-bg:#0c2620;
+    --red:#e2726c;
+    --red-bg:#33191a;
+    --blue:#4d93e0;
+    --blue-bg:#0f2338;
+    --purple:#8b82e8;
+    --pink:#dd5c8a;
+    --green:#7cb342;
+    --gray:#8c9099;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+  }
   body{
-    background:var(--bg);
+    background:
+      radial-gradient(1100px 560px at 12% -12%, #151b2c 0%, transparent 60%),
+      var(--bg);
     color:var(--text-primary);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     font-size:14px;
     line-height:1.5;
   }
   a{color:inherit;text-decoration:none;}
+  button:focus-visible, input:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
 
-  /* ---------- Top nav ---------- */
-  header{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:14px 28px;border-bottom:0.5px solid var(--border);
-    flex-wrap:wrap;gap:12px;
+  /* ---------- Masthead (replaces the old nav header) ---------- */
+  @keyframes riseIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .masthead{padding:36px 28px 0;animation:riseIn .45s ease-out both;}
+  .masthead-top{display:flex;align-items:center;gap:16px;}
+  .seal{
+    width:46px;height:46px;border-radius:50%;flex-shrink:0;
+    border:1.5px dashed var(--amber);color:var(--amber);
+    display:flex;align-items:center;justify-content:center;font-size:19px;
+    transform:rotate(-8deg);background:var(--amber-bg);
   }
-  .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px;}
-  .brand .sub{display:block;font-size:9px;font-weight:600;letter-spacing:0.06em;color:var(--amber);}
-  nav{display:flex;gap:4px;flex-wrap:wrap;}
-  nav a{
-    display:flex;align-items:center;gap:6px;
-    padding:7px 12px;border-radius:7px;font-size:13px;color:var(--text-secondary);
-    transition:background .15s;
+  .masthead-eyebrow{
+    display:block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--amber);margin-bottom:4px;
   }
-  nav a:hover{background:#181b24;color:var(--text-primary);}
-  nav a.active{background:var(--amber-bg);color:var(--amber);font-weight:600;}
-  nav a.danger{background:var(--red-bg);color:var(--red);}
-  nav a.teal{background:var(--teal-bg);color:#5dcaa5;}
-  .user-block{display:flex;align-items:center;gap:14px;}
-  .avatar{
-    width:32px;height:32px;border-radius:50%;
-    background:linear-gradient(135deg,#5dcaa5,#378add);
-    display:flex;align-items:center;justify-content:center;font-weight:600;font-size:12px;color:#04342c;
+  .masthead-title{
+    font-family:'Fraunces',Georgia,serif;font-size:32px;font-weight:600;
+    letter-spacing:-.01em;color:var(--text-primary);
   }
-  .user-name{font-size:13px;line-height:1.3;}
-  .user-name .role{display:block;font-size:10px;color:var(--amber);font-weight:600;}
-  .logout{
-    display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:7px;
-    border:0.5px solid #3a1c1c;color:var(--red);font-size:13px;cursor:pointer;background:none;
-  }
-  .logout:hover{background:var(--red-bg);}
-
-  /* ---------- Hero ---------- */
-  .hero{padding:32px 28px 8px;}
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:6px;
-    font-size:11px;font-weight:600;color:var(--amber);
-    background:var(--amber-bg);padding:5px 11px;border-radius:7px;
-  }
-  h1{font-size:26px;font-weight:600;margin:14px 0 6px;}
-  .hero p{color:var(--text-secondary);font-size:13px;}
+  .masthead-desc{margin:14px 0 0;font-size:13px;color:var(--text-secondary);max-width:640px;}
+  .masthead-rule{margin-top:24px;border-top:1px solid var(--border-strong);position:relative;}
+  .masthead-rule::after{content:"";position:absolute;top:4px;left:0;right:0;border-top:1px solid var(--border);}
 
   /* ---------- AI banner ---------- */
   .ai-banner{
-    margin:20px 28px;padding:14px 18px;border-radius:10px;
+    margin:24px 28px 0;padding:14px 18px;border-radius:10px;
     background:var(--panel);border:0.5px solid var(--border);
     display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
   }
@@ -93,14 +83,14 @@
   .ai-banner-title{font-size:14px;font-weight:600;}
   .ai-banner-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
   .btn-generate{
-    background:var(--amber);color:#2c1c02;border:none;font-weight:600;
+    background:var(--amber);color:#241a04;border:none;font-weight:600;
     padding:9px 18px;border-radius:7px;font-size:13px;cursor:pointer;
   }
   .btn-generate:hover{filter:brightness(1.08);}
 
   /* ---------- Search card ---------- */
   .card{
-    margin:0 28px 20px;padding:18px 20px;border-radius:12px;
+    margin:20px 28px;padding:18px 20px;border-radius:12px;
     background:var(--panel);border:0.5px solid var(--border);
   }
   .card-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:2px;}
@@ -114,7 +104,7 @@
     background:#161922;color:var(--text-primary);
   }
   .btn:hover{background:#1c202b;}
-  .btn.primary{background:var(--blue);border-color:var(--blue);color:#042c53;}
+  .btn.primary{background:var(--blue);border-color:var(--blue);color:#04182e;}
   .btn.primary:hover{filter:brightness(1.08);}
 
   .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
@@ -130,7 +120,7 @@
     padding:0 12px;color:var(--text-primary);font-size:13px;
   }
   .field input::placeholder{color:var(--text-muted);}
-  .field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #378add22;}
+  .field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #4d93e022;}
 
   /* ---------- Results ---------- */
   .results-label{
@@ -142,58 +132,46 @@
   .roll-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
   @media(max-width:880px){.roll-grid,.field-grid{grid-template-columns:1fr;}}
 
-  .roll-panel{background:var(--panel);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;}
+  .roll-panel{background:var(--panel);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;position:relative;}
+  .roll-panel::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;}
+  .roll-panel.era-2025::before{background:var(--blue);}
+  .roll-panel.era-2002::before{background:var(--amber);}
   .roll-head{padding:12px 16px;border-bottom:0.5px solid var(--border);}
   .roll-head-top{display:flex;align-items:center;justify-content:space-between;}
-  .roll-title{font-size:13px;font-weight:700;color:var(--amber);}
+  .roll-title{font-size:13px;font-weight:700;}
+  .roll-panel.era-2025 .roll-title{color:var(--blue);}
+  .roll-panel.era-2002 .roll-title{color:var(--amber);}
   .roll-count{font-size:11px;color:var(--text-muted);}
-  .roll-dots{display:flex;gap:12px;margin-top:8px;font-size:11px;color:var(--text-secondary);}
-  .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;}
-  .dot.blue{background:var(--blue);} .dot.gray{background:var(--gray);} .dot.purple{background:var(--purple);}
 
-  .roll-sub{
-    display:flex;align-items:center;gap:6px;padding:8px 16px;font-size:12px;
-    color:#5dcaa5;background:var(--teal-bg);border-bottom:0.5px solid var(--border);
-  }
   .badge-row{display:flex;gap:6px;padding:8px 16px;border-bottom:0.5px solid var(--border);flex-wrap:wrap;}
   .badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;}
   .badge.amber{background:var(--amber-bg);color:var(--amber);}
   .badge.teal{background:var(--teal-bg);color:#5dcaa5;}
-  .badge.blue{background:#0c2b45;color:#85b7eb;}
-  .badge.purple{background:#241f45;color:#afa9ec;}
-  .badge.pink{background:#3a1c2b;color:#ed93b1;}
-  .badge.gray{background:#22221f;color:#b4b2a9;}
+  .badge.blue{background:var(--blue-bg);color:#85b7eb;}
+  .badge.purple{background:#211c40;color:#afa9ec;}
+  .badge.pink{background:#331a26;color:#ed93b1;}
+  .badge.gray{background:#1c1f26;color:#b4b2a9;}
   .badge.green{background:#1a2b0e;color:#97c459;}
 
-  table{width:100%;border-collapse:collapse;}
-  thead th{
-    text-align:left;font-size:10px;font-weight:600;color:var(--text-muted);
-    text-transform:uppercase;letter-spacing:.04em;padding:8px 16px;
-    border-bottom:0.5px solid var(--border);position:sticky;top:0;background:var(--panel);
-  }
-  tbody td{padding:10px 16px;font-size:12px;border-bottom:0.5px solid var(--border);vertical-align:middle;}
-  tbody tr:hover{background:#161922;}
-  tbody tr:last-child td{border-bottom:none;}
   .scroll-body{max-height:520px;overflow-y:auto;padding:10px 12px;}
   .scroll-body::-webkit-scrollbar{width:6px;}
   .scroll-body::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px;}
 
-  .name-cell{color:var(--text-primary);font-weight:500;}
-  .name-cell .hi{color:var(--blue);}
-  .muted-cell{color:var(--text-secondary);}
-
-  /* ---------- Voter cards (results) ---------- */
+  /* ---------- Voter cards ---------- */
   .voter-list{display:flex;flex-direction:column;gap:8px;}
   .voter-card{
-    background:var(--panel-alt);border:0.5px solid var(--border-strong);border-radius:10px;
-    padding:12px 14px;transition:border-color .15s,background .15s;
+    background:var(--panel-alt);border:0.5px solid var(--border-strong);border-left:3px solid var(--border-strong);
+    border-radius:10px;padding:12px 14px;transition:border-color .15s,background .15s,transform .15s;
   }
-  .voter-card:hover{border-color:var(--blue);background:#12151f;}
+  .voter-card:hover{border-color:var(--blue);border-left-color:var(--blue);background:#12151f;transform:translateX(1px);}
+  .voter-card.status-flag{border-left-color:var(--red);}
+  .voter-card.status-flag:hover{border-left-color:var(--red);}
+  .voter-card.status-verify{border-left-color:var(--teal);}
+  .voter-card.status-verify:hover{border-left-color:var(--teal);}
   .vc-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
   .vc-top-left{display:flex;align-items:center;gap:10px;min-width:0;}
   .vc-name{font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .vc-name .hi{color:var(--blue);}
-  .vc-score{font-size:10px;color:var(--text-muted);flex-shrink:0;}
   .vc-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 14px;}
   @media(max-width:1180px){.vc-fields{grid-template-columns:repeat(2,1fr);}}
   .vc-field{min-width:0;}
@@ -209,14 +187,11 @@
   .vc-field-value .hi{color:var(--blue);}
   .vc-field-value.empty{color:var(--text-muted);font-style:italic;}
   .voter-empty{padding:30px 16px;text-align:center;color:var(--text-muted);font-size:12px;}
-  .status-pill{
-    font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;display:inline-block;
-  }
+  .status-pill{font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;display:inline-block;}
   .status-pill.not-mapped{background:var(--red-bg);color:var(--red);}
   .status-pill.mapped{background:#1a2b0e;color:#97c459;}
   .status-pill.completed{background:var(--teal-bg);color:#5dcaa5;}
   input[type=checkbox]{width:15px;height:15px;accent-color:var(--blue);}
-  .empty-row td{padding:28px 16px;text-align:center;color:var(--text-muted);font-size:12px;}
 
   /* ---------- Name variant chips ---------- */
   .variant-row{display:none;flex-wrap:wrap;align-items:center;gap:8px;margin:2px 0 14px;}
@@ -224,47 +199,30 @@
   .variant-row .variant-label{font-size:11px;color:var(--text-muted);}
   .variant-chip{
     font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;
-    background:#0c2b45;color:#85b7eb;border:0.5px solid #1a3a5c;
+    background:var(--blue-bg);color:#85b7eb;border:0.5px solid #1a3a5c;
   }
-  .variant-chip.base{background:var(--amber-bg);color:var(--amber);border-color:#4a3610;}
 </style>
 </head>
 <body>
 
-<header>
-  <div style="display:flex;align-items:center;gap:26px;flex-wrap:wrap;">
-    <div class="brand"><i class="ti ti-shield-check" style="color:var(--blue);font-size:20px;"></i>Constituency <span style="color:var(--amber);margin-left:2px;">Connect</span></div>
-    <nav>
-      <a href="#"><i class="ti ti-layout-dashboard"></i>Dashboard</a>
-      <a href="#"><i class="ti ti-clipboard-list"></i>Survey</a>
-      <a href="#"><i class="ti ti-building-community"></i>Schemes</a>
-      <a href="#"><i class="ti ti-database"></i>Data</a>
-      <a href="#" class="active"><i class="ti ti-checkbox"></i>SIR</a>
-      <a href="#"><i class="ti ti-grid-dots"></i>SWOT</a>
-      <a href="#" class="danger"><i class="ti ti-star"></i>BJP Strategy</a>
-      <a href="#" class="teal"><i class="ti ti-bolt"></i>AI</a>
-      <a href="#"><i class="ti ti-settings"></i>Admin</a>
-    </nav>
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="seal" aria-hidden="true"><i class="ti ti-shield-check"></i></div>
+    <div>
+      <span class="masthead-eyebrow">Special Intensive Revision</span>
+      <h1 class="masthead-title">Voter Registry Cross-Check</h1>
+    </div>
   </div>
-  <div class="user-block">
-    <div class="avatar">VK</div>
-    <div class="user-name">Vedavyas kamath<span class="role">MLA</span></div>
-    <button class="logout"><i class="ti ti-logout"></i>Logout</button>
-  </div>
+  <p class="masthead-desc">Cross-reference a voter across the 2002 and 2025 rolls in real time &middot; anomaly detection &middot; spelling &amp; short-form matching.</p>
+  <div class="masthead-rule"></div>
 </header>
-
-<section class="hero">
-  <span class="eyebrow"><i class="ti ti-file-check"></i>SIR module</span>
-  <h1>Special intensive revision</h1>
-  <p>Voter roll comparison &middot; 2002 vs 2025 &middot; Anomaly detection &middot; Classification</p>
-</section>
 
 <div class="ai-banner">
   <div class="ai-banner-left">
     <div class="ai-icon"><i class="ti ti-bolt"></i></div>
     <div>
       <div class="ai-banner-title">Get AI overview — SIR intelligence</div>
-      <div class="ai-banner-sub">ShaastraAI &middot; 19 records &middot; Ward + religion + booth analysis</div>
+      <div class="ai-banner-sub">ShaastraAI &middot; 19 records &middot; Ward + booth pattern analysis</div>
     </div>
   </div>
   <button class="btn-generate">Generate</button>
@@ -316,7 +274,7 @@
 
   <div class="roll-grid">
     <!-- 2025 roll -->
-    <div class="roll-panel">
+    <div class="roll-panel era-2025">
       <div class="roll-head">
         <div class="roll-head-top">
           <span class="roll-title">2025 roll</span>
@@ -330,7 +288,7 @@
     </div>
 
     <!-- 2002 roll -->
-    <div class="roll-panel">
+    <div class="roll-panel era-2002">
       <div class="roll-head">
         <div class="roll-head-top">
           <span class="roll-title">2002 roll</span>
@@ -368,6 +326,12 @@ function statusPill(status){
   return '<span class="status-pill mapped"><i class="ti ti-check"></i> ' + esc(status || "active") + '</span>';
 }
 
+function cardAccentClass(status){
+  if(status==="not-mapped" || status==="deleted") return 'status-flag';
+  if(status==="completed") return 'status-verify';
+  return '';
+}
+
 function getFilters(){
   return {
     name:  document.getElementById('q-name').value.trim(),
@@ -380,7 +344,7 @@ function getFilters(){
 
 function setConnStatus(state, msg){
   const el = document.getElementById('conn-status');
-  const colors = {ok:'#5dcaa5', error:'#e0847f', loading:'#e3a008'};
+  const colors = {ok:'#5dcaa5', error:'#e0847f', loading:'#c99a3d'};
   el.style.color = colors[state] || '#8a909b';
   el.textContent = msg;
 }
@@ -416,7 +380,7 @@ function renderVariantChips(data){
 
 function voterCard(r, filters){
   return `
-    <div class="voter-card">
+    <div class="voter-card ${cardAccentClass(r.status)}">
       <div class="vc-top">
         <div class="vc-top-left">
           <input type="checkbox" class="vc-check">
@@ -448,14 +412,6 @@ function voterCard(r, filters){
         <div class="vc-field">
           <span class="vc-field-label"><i class="ti ti-gender-bigender"></i> Gender</span>
           ${fieldValue(r.gender)}
-        </div>
-        <div class="vc-field">
-          <span class="vc-field-label"><i class="ti ti-star-of-david"></i> Religion</span>
-          ${fieldValue(r.religion)}
-        </div>
-        <div class="vc-field">
-          <span class="vc-field-label"><i class="ti ti-users-group"></i> Community</span>
-          ${fieldValue(r.community)}
         </div>
       </div>
     </div>`;
