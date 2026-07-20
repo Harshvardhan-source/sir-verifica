@@ -49,7 +49,7 @@
 
   /* ---------- Masthead (replaces the old nav header) ---------- */
   @keyframes riseIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-  .masthead{padding:36px 28px 0;animation:riseIn .45s ease-out both;}
+  .masthead{padding:14px 28px 0;animation:riseIn .45s ease-out both;}
   .masthead-top{display:flex;align-items:center;gap:16px;}
   .seal{
     width:46px;height:46px;border-radius:50%;flex-shrink:0;
@@ -68,6 +68,12 @@
   .masthead-desc{margin:14px 0 0;font-size:13px;color:var(--text-secondary);max-width:640px;}
   .masthead-rule{margin-top:24px;border-top:1px solid var(--border-strong);position:relative;}
   .masthead-rule::after{content:"";position:absolute;top:4px;left:0;right:0;border-top:1px solid var(--border);}
+
+  /* ---------- Brand row (logo + wordmark, top-left) ---------- */
+  .brand-row{display:flex;align-items:center;gap:10px;padding:20px 28px 0;}
+  .brand-logo{width:26px;height:26px;border-radius:7px;object-fit:cover;display:block;}
+  .brand-name{font-size:14px;font-weight:600;color:var(--text-primary);letter-spacing:-.01em;}
+  .brand-name .brand-accent{color:var(--amber);}
 
   /* ---------- AI banner ---------- */
   .ai-banner{
@@ -205,6 +211,11 @@
 </head>
 <body>
 
+<div class="brand-row">
+  <img src="data:image/jpeg;base64,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" alt="Constituency Connect logo" class="brand-logo">
+  <span class="brand-name">Constituency <span class="brand-accent">Connect</span></span>
+</div>
+
 <header class="masthead">
   <div class="masthead-top">
     <div class="seal" aria-hidden="true"><i class="ti ti-shield-check"></i></div>
@@ -217,6 +228,16 @@
   <div class="masthead-rule"></div>
 </header>
 
+<div class="ai-banner">
+  <div class="ai-banner-left">
+    <div class="ai-icon"><i class="ti ti-bolt"></i></div>
+    <div>
+      <div class="ai-banner-title">Get AI overview — SIR intelligence</div>
+      <div class="ai-banner-sub">ShaastraAI &middot; 19 records &middot; Ward + booth pattern analysis</div>
+    </div>
+  </div>
+  <button class="btn-generate">Generate</button>
+</div>
 
 <div class="card">
   <div class="card-head">
