@@ -86,10 +86,12 @@ def require_auth(credentials: HTTPBasicCredentials = Depends(security)):
 def to_ui_record(rec: dict, timeline: str) -> dict:
     """Map internal ES field names to the flat shape the HTML expects.
 
-    Deliberately does NOT surface religion/community, even though the ES
-    documents carry those fields (from a separate classifier pipeline) -
-    this API is being deployed to a public host, which is a different and
-    much larger exposure than a local dev instance. See deployment notes."""
+    Surfaces religion/community alongside the rest of the voter card
+    fields - these come from a name/surname-based classifier pipeline
+    (mongo_voter_classifier.py), not self-declared data, so treat them as
+    inferred rather than verified. Since this API sits behind HTTP Basic
+    Auth the same as every other field here (see module docstring), it
+    gets the same access control as name/EPIC/house no/etc."""
     return {
         "name": rec.get("voter_name") or "",
         "relation": rec.get("relation_name") or "",
@@ -100,6 +102,8 @@ def to_ui_record(rec: dict, timeline: str) -> dict:
         "part_no": rec.get("part_no"),
         "age": rec.get("age"),
         "gender": rec.get("gender"),
+        "religion": rec.get("religion") or "",
+        "community": rec.get("community") or "",
         "score": rec.get("_score"),
         "timeline": timeline,
     }
